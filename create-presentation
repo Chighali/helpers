@@ -1,0 +1,44 @@
+pip install python-pptx pandas
+
+import pandas as pd
+
+# Example: Load a CSV file into a DataFrame
+data = pd.read_csv('your_data.csv')
+
+from pptx import Presentation
+from pptx.util import Inches
+
+# Create a presentation object
+prs = Presentation()
+
+# Add a slide layout (5 corresponds to a layout with a title and content)
+slide_layout = prs.slide_layouts[5]
+slide = prs.slides.add_slide(slide_layout)
+
+# Set slide title
+title = slide.shapes.title
+title.text = "Data Table"
+
+# Define the position and size of the table on the slide
+left = Inches(1.0)
+top = Inches(1.5)
+width = Inches(8.0)
+height = Inches(0.8)
+
+# Number of rows and columns
+rows, cols = data.shape
+
+# Add a table to the slide
+table = slide.shapes.add_table(rows + 1, cols, left, top, width, height).table
+
+# Add the headers
+for col_num, col_name in enumerate(data.columns):
+    table.cell(0, col_num).text = col_name
+
+# Add the data
+for i in range(rows):
+    for j in range(cols):
+        table.cell(i + 1, j).text = str(data.iloc[i, j])
+
+# Save the presentation
+prs.save('output_presentation.pptx')
