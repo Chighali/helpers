@@ -1,0 +1,25 @@
+from pptx import Presentation
+
+# Load the PowerPoint presentation
+prs = Presentation('your_presentation.pptx')
+
+# Iterate over all slides
+for slide_number, slide in enumerate(prs.slides, start=1):
+    print(f"Slide {slide_number}:")
+    
+    # Iterate over all shapes in the slide
+    for shape in slide.shapes:
+        if shape.has_text_frame:
+            print(f"  - TextBox/TextFrame: '{shape.text}'")
+        elif shape.has_table:
+            print("  - Table")
+        elif shape.has_chart:
+            print("  - Chart")
+        elif shape.has_picture:
+            print("  - Picture")
+        elif shape.has_smart_art:
+            print("  - SmartArt")
+        elif shape.has_media:
+            print("  - Media (Video/Audio)")
+        else:
+            print("  - Other shape (e.g., AutoShape, Placeholder)")
