@@ -1,0 +1,22 @@
+from pptx import Presentation
+
+# Load the PowerPoint presentation
+prs = Presentation('your_presentation.pptx')
+
+# Iterate over all slides in the presentation
+for slide in prs.slides:
+    
+    # Iterate over all shapes in the slide
+    for shape in slide.shapes:
+        
+        # Check if the shape is a table
+        if shape.has_table:
+            table = shape.table
+            
+            # Iterate over each cell in the table and clear the text
+            for row in table.rows:
+                for cell in row.cells:
+                    cell.text = ""
+
+# Save the updated presentation
+prs.save('cleared_tables_presentation.pptx')
