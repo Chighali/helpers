@@ -1,0 +1,38 @@
+from pptx import Presentation
+
+# Load the existing PowerPoint presentation
+prs = Presentation('your_existing_presentation.pptx')
+
+import pandas as pd
+
+# Assuming your new data is in a DataFrame
+# Example: Load new data from a CSV file
+new_data = pd.read_csv('new_data.csv')
+
+# Iterate over all the slides in the presentation
+for slide in prs.slides:
+    # Iterate over all shapes in the slide
+    for shape in slide.shapes:
+        # Check if the shape is a table
+        if shape.has_table:
+            table = shape.table
+            
+            # Get the number of rows and columns in the table
+            rows, cols = table.rows, table.columns
+            
+            # Iterate through each cell in the table and update the content
+            for i in range(1, len(table.rows)):  # Assuming first row is headers
+                for j in range(len(table.columns)):
+                    # Update table cell with the new data
+                    table.cell(i, j).text = str(new_data.iloc[i-1, j])
+
+# Save the updated presentation
+prs.save('updated_presentation.pptx')
+
+# Example: Update data in a specific slide by title
+for slide in prs.slides:
+    if slide.shapes.title and slide.shapes.title.text == "Specific Slide Title":
+        for shape in slide.shapes:
+            if shape.has_table:
+                table = shape.table
+                # Update the table with new data similar to the above example
