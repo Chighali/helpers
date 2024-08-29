@@ -1,0 +1,55 @@
+#pip install pandas openpyxl
+
+import pandas as pd
+from pptx import Presentation
+
+
+# Load the data from the Excel file
+df = pd.read_excel('your_file.xlsx', sheet_name='Sheet1')  # Replace 'Sheet1' with your actual sheet name if needed
+
+# Display the DataFrame
+print(df)
+
+
+
+
+# Load the presentation
+prs = Presentation('your_presentation.pptx')
+
+# Load your new data into a DataFrame (replace this with your actual DataFrame)
+new_data = {
+    'Header1': ['NewData1', 'NewData2', 'NewData3'],
+    'Header2': ['NewData4', 'NewData5', 'NewData6'],
+    'Header3': ['NewData7', 'NewData8', 'NewData9']
+}
+df = pd.DataFrame(new_data)
+
+# Specify the slide index
+slide_index = 2  # Change to the index of the slide you want to access
+
+# Get the slide
+slide = prs.slides[slide_index]
+
+# Locate the table (assuming there's only one table)
+table = None
+for shape in slide.shapes:
+    if shape.has_table:
+        table = shape.table
+        break
+
+# Update the table with new data from the DataFrame
+if table is not None:
+    for i, row in enumerate(table.rows):
+        for j, cell in enumerate(row.cells):
+            # Update the cell with the corresponding DataFrame value
+            try:
+                cell.text = df.iat[i, j]
+            except IndexError:
+                # Handle cases where the DataFrame is smaller than the table
+                cell.text = ""
+
+    # Save the updated presentation
+    prs.save('updated_presentation.pptx')
+    print("Table updated and saved in 'updated_presentation.pptx'.")
+else:
+    print("No table found on the slide.")
